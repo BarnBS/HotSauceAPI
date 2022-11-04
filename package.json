@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "This is an API of hot sauces made for OpenClassroom's 6th project of the WebDev parcours.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BarnBS/HotSauceAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BarnBS/HotSauceAPI/issues"
+  },
+  "homepage": "https://github.com/BarnBS/HotSauceAPI#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^6.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

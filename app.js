@@ -15,6 +15,8 @@ mongoose.connect(`mongodb+srv://hotsauceadmin:${mdp}@${cluster}.ougjqem.mongodb.
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -22,8 +24,23 @@ app.use((req, res, next) => {
     next();
 });
 
+
 app.use('/api/auth', userRoutes);
 
-app.use('/api/auth', (req,res) => {res.end('ok')});
+
+//TESTER QUE LES UTILISATEURS SONT BIEN CREES
+const User = require('./models/User');
+app.get('/api/users', (req,res,next) => {
+    User.find().then(
+    (users) => {
+      res.status(200).json(users);
+    }
+  ).catch(
+    (error) => {
+      res.status(400).json({
+        error: error
+      });
+    }
+  );})
 
 module.exports = app;

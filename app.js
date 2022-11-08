@@ -24,23 +24,24 @@ app.use((req, res, next) => {
     next();
 });
 
-
 app.use('/api/auth', userRoutes);
 
 
 //TESTER QUE LES UTILISATEURS SONT BIEN CREES
 const User = require('./models/User');
-app.get('/api/users', (req,res,next) => {
+app.get('/api/users/test', (req,res,next) => {
     User.find().then(
     (users) => {
-      res.status(200).json(users);
-    }
-  ).catch(
-    (error) => {
-      res.status(400).json({
-        error: error
-      });
-    }
-  );})
-
+        // users.forEach(user =>  console.log(user.id));
+        res.status(200).json(users);
+    })
+    .catch(
+        (error) => {
+            res.status(400).json({
+                error: error
+            });
+        }
+    );
+})
+        
 module.exports = app;

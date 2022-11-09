@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const userRoutes = require('./routes/routesUsers');
+const routesSauces = require('./routes/routesSauces');
 
 const mongoose = require('mongoose');
 
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/auth', userRoutes);
+app.use('/api/sauces', routesSauces);
 
 
 //TESTER QUE LES UTILISATEURS SONT BIEN CREES

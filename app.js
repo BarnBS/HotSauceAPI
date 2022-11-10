@@ -1,9 +1,10 @@
 const express = require('express');
-const app = express();
 const userRoutes = require('./routes/routesUsers');
 const routesSauces = require('./routes/routesSauces');
-
+const path = require('path');
 const mongoose = require('mongoose');
+
+const app = express();
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -30,7 +31,7 @@ app.use('/api/sauces', routesSauces);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
-//TESTER QUE LES UTILISATEURS SONT BIEN CREES
+//TESTER QUE LES UTILISATEURS SONT BIEN CREES SUR POSTMAN
 const User = require('./models/User');
 app.get('/api/users/test', (req,res,next) => {
     User.find().then(

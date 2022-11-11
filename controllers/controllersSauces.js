@@ -15,16 +15,16 @@ exports.createSauce = (req, res) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
     delete sauceObject._userId;
-    delete sauceObject.like;
-    delete sauceObject.dislike;
+    delete sauceObject.likes;
+    delete sauceObject.dislikes;
     delete sauceObject.usersLiked;
     delete sauceObject.usersDisliked;
     const sauce = new Sauce ({
         ...sauceObject,
         userId: req.auth.userId,
         imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-        like : 0,
-        dislike : 0,
+        likes : 0,
+        dislikes : 0,
         usersLiked : [],
         usersDisliked : []
     });
@@ -87,17 +87,52 @@ exports.deleteSauce = (req, res) => {
 };
 
 exports.likeSauce = (req,res) => {
+
+    userIdLike = req.body.userId;
+    likesNumber = req.body.like;
+
     Sauce.findOne({ _id: req.params.id})
     .then((sauce) => {
-        if (!req.auth.userId) {
-            res.status(401).json({message: 'Action non autorisée !'});
-        } else {
-            const sauceObject = JSON.parse(req.body.sauce);
-            sauce.updateOne({...sauceObject, likes : 1})
-                    .then(() => res.status(200).json({message : 'Objet Liké!'}))
-                    .catch(error => res.status(401).json({ error }));
+        console.log(req.body.like);
+        // console.log(sauce.usersLiked);
+        // console.log(req.auth.userId);
+        if(likesNumber === 1) {
+                sauce.usersLiked.push(req.auth.userId);
+                console.log(sauce.usersLiked);
+                sauce.updateOne({likes : sauce.likes+1, usersLiked : sauce.usersLiked})
+                    .then(() => {res.status(200).json({message : `Vous aimez la sauce.`})
+                    })
+                    .catch(error => res.status(500).json({ error }));
+        }
+        else if (likesNumber === -1){
+                sauce.usersDisliked.push(req.auth.userId);
+                console.log(sauce.usersDisliked);
+                sauce.updateOne({dislikes : sauce.dislikes+1, usersDisliked : sauce.usersDisliked})
+                    .then(() => {res.status(200).json({message : `Vous n'aimez pas la sauce.`})
+                    })
+                    .catch(error => res.status(500).json({ error }));
+        }
+        else if (likesNumber === 0) {
+            if (sauce.usersDisliked.find(id => id == req.auth.userId)){
+                userIndex = sauce.usersDisliked.indexOf(req.auth.userId);
+                sauce.usersDisliked.splice(userIndex,1);
+                sauce.updateOne({dislikes : sauce.dislikes-1, usersDisliked : sauce.usersDisliked})
+                    .then(() => {res.status(200).json({message : `Vous êtes indifférent à la sauce.`})
+                    })
+                    .catch(error => res.status(500).json({ error }));
             }
-        })
+            else if (sauce.usersLiked.find(id => id == req.auth.userId)){
+                userIndex = sauce.usersLiked.indexOf(req.auth.userId);
+                sauce.usersLiked.splice(userIndex,1);
+                sauce.updateOne({likes : sauce.likes-1, usersLiked : sauce.usersLiked})
+                    .then(() => {res.status(200).json({message : `Vous êtes indifférent à la sauce.`})
+                    })
+                    .catch(error => res.status(500).json({ error }));
+            }
+        }
+        else{
+            res.status(400).json({message : "Bad request."})
+        }})
     .catch( error => {
         res.status(500).json({ error });
     });

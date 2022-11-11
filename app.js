@@ -30,6 +30,10 @@ app.use('/api/auth', userRoutes);
 app.use('/api/sauces', routesSauces);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+app.get('api/users/test', (req,res) => {
+    
+})
+
 
 //TESTER QUE LES UTILISATEURS SONT BIEN CREES SUR POSTMAN
 const User = require('./models/User');

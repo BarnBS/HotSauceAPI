@@ -93,11 +93,8 @@ exports.likeSauce = (req,res) => {
 
     Sauce.findOne({ _id: req.params.id})
     .then((sauce) => {
-        console.log(req.body.like);
-        // console.log(sauce.usersLiked);
-        // console.log(req.auth.userId);
         if(likesNumber === 1) {
-                sauce.usersLiked.push(req.auth.userId);
+                sauce.usersLiked.push(userIdLike);
                 console.log(sauce.usersLiked);
                 sauce.updateOne({likes : sauce.likes+1, usersLiked : sauce.usersLiked})
                     .then(() => {res.status(200).json({message : `Vous aimez la sauce.`})
@@ -105,24 +102,23 @@ exports.likeSauce = (req,res) => {
                     .catch(error => res.status(500).json({ error }));
         }
         else if (likesNumber === -1){
-                sauce.usersDisliked.push(req.auth.userId);
-                console.log(sauce.usersDisliked);
+                sauce.usersDisliked.push(userIdLike);
                 sauce.updateOne({dislikes : sauce.dislikes+1, usersDisliked : sauce.usersDisliked})
                     .then(() => {res.status(200).json({message : `Vous n'aimez pas la sauce.`})
                     })
                     .catch(error => res.status(500).json({ error }));
         }
         else if (likesNumber === 0) {
-            if (sauce.usersDisliked.find(id => id == req.auth.userId)){
-                userIndex = sauce.usersDisliked.indexOf(req.auth.userId);
+            if (sauce.usersDisliked.find(id => id == userIdLike)){
+                userIndex = sauce.usersDisliked.indexOf(userIdLike);
                 sauce.usersDisliked.splice(userIndex,1);
                 sauce.updateOne({dislikes : sauce.dislikes-1, usersDisliked : sauce.usersDisliked})
                     .then(() => {res.status(200).json({message : `Vous êtes indifférent à la sauce.`})
                     })
                     .catch(error => res.status(500).json({ error }));
             }
-            else if (sauce.usersLiked.find(id => id == req.auth.userId)){
-                userIndex = sauce.usersLiked.indexOf(req.auth.userId);
+            else if (sauce.usersLiked.find(id => id == userIdLike)){
+                userIndex = sauce.usersLiked.indexOf(userIdLike);
                 sauce.usersLiked.splice(userIndex,1);
                 sauce.updateOne({likes : sauce.likes-1, usersLiked : sauce.usersLiked})
                     .then(() => {res.status(200).json({message : `Vous êtes indifférent à la sauce.`})

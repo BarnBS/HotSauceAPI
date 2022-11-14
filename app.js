@@ -8,10 +8,9 @@ const app = express();
 
 const dotenv = require("dotenv");
 dotenv.config();
-const mdp = process.env.mongomdp;
-const cluster = process.env.cluster;
+const mongoDBConnect = process.env.MONGO_DB
 
-mongoose.connect(`mongodb+srv://hotsauceadmin:${mdp}@${cluster}.ougjqem.mongodb.net/?retryWrites=true&w=majority`,
+mongoose.connect(`${mongoDBConnect}`,
 { useNewUrlParser: true,
     useUnifiedTopology: true })
     .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -30,26 +29,22 @@ app.use('/api/auth', userRoutes);
 app.use('/api/sauces', routesSauces);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.get('api/users/test', (req,res) => {
-    
-})
 
-
-//TESTER QUE LES UTILISATEURS SONT BIEN CREES SUR POSTMAN
-const User = require('./models/User');
-app.get('/api/users/test', (req,res,next) => {
-    User.find().then(
-    (users) => {
-        // users.forEach(user =>  console.log(user.id));
-        res.status(200).json(users);
-    })
-    .catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );
-})
+// //TESTER QUE LES UTILISATEURS SONT BIEN CREES SUR POSTMAN
+// const User = require('./models/User');
+// app.get('/api/users/test', (req,res,next) => {
+//     User.find().then(
+//     (users) => {
+//         // users.forEach(user =>  console.log(user.id));
+//         res.status(200).json(users);
+//     })
+//     .catch(
+//         (error) => {
+//             res.status(400).json({
+//                 error: error
+//             });
+//         }
+//     );
+// })
         
 module.exports = app;

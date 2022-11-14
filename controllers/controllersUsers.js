@@ -4,9 +4,12 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
+const dotenv = require("dotenv");
+dotenv.config();
+const TOKEN_String = process.env.TOKEN_MESSAGE
+
 exports.signup = (req, res) => {
 
-    //DEMANDER COMMENT AFFICHER MESSAGE
     const mailRegex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/gmu;
     if (mailRegex.test(req.body.email) == false){
         return res.status(401).json({message : "Adresse mail invalide, veuillez entrer une adresse de la forme xxxx@xxxx.x."});};
@@ -39,7 +42,7 @@ exports.login = (req, res) => {
                         userId: user._id,
                         token: jwt.sign(
                                 { userId: user._id },
-                                'RANDOM_TOKEN_SECRET',
+                                `${TOKEN_String}`,
                                 { expiresIn: '24h' }
                             )
                     });

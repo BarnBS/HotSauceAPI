@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const dotenv = require("dotenv");
 dotenv.config();
-const TOKEN_String = process.env.TOKEN_MESSAGE
+const TOKEN_String = process.env.TOKEN_KEY
 
 exports.signup = (req, res) => {
 
